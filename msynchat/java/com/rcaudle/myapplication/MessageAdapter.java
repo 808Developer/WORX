@@ -1,4 +1,4 @@
-package com.rcaudle.myapplication.adapters;
+package com.rcaudle.myapplication;
 
 import android.content.Context;
 import android.view.LayoutInflater;
