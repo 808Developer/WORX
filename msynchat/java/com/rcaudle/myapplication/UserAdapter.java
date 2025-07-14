@@ -10,11 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.bumptech.glide.Glide;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,14 +26,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import com.rcaudle.myapplication.MessageActivity;
 import com.rcaudle.myapplication.R;
 import com.rcaudle.myapplication.model.Chat;
 import com.rcaudle.myapplication.model.User;
 import com.rcaudle.myapplication.util.Constants;
-
-import java.util.List;
-
 /**
  * created by RCaudle
  */
@@ -45,14 +47,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.mContext = mContext;
         this.isChat = isChat;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final User user = mUsers.get(position);
@@ -62,13 +62,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         } else {
             Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
         }
-
         if (isChat) {
             lastMessage(user.getId(), holder.last_msg);
         } else {
             holder.last_msg.setVisibility(View.GONE);
         }
-
         if (isChat) {
             if ("Online".equals(user.getStatus())) {
                 holder.img_on.setVisibility(View.VISIBLE);
@@ -81,19 +79,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.img_on.setVisibility(View.GONE);
             holder.img_off.setVisibility(View.GONE);
         }
-
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, MessageActivity.class);
             intent.putExtra(Constants.INTENT_USER_ID, user.getId());
             mContext.startActivity(intent);
         });
     }
-
     @Override
     public int getItemCount() {
         return mUsers.size();
     }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView username;
         public CircleImageView profile_image;
@@ -112,7 +107,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             myImageView = itemView.findViewById(R.id.myImageView);
         }
     }
-
     // Check for the last message
     private void lastMessage(final String userid, final TextView last_msg) {
         theLastMessage = "default";
@@ -125,13 +119,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (firebaseUser == null) return;
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
                     if (chat != null && chat.getReceiver() != null && chat.getSender() != null) {
                          if ((chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid)) ||
                             (chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getUid()))) {
-                             
                              if ("New Picture!".equals(chat.getMessage())) {
                                  theLastMessage = mContext.getString(R.string.new_picture_received);
                              } else {
@@ -140,7 +132,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                          }
                     }
                 }
-
                 if ("default".equals(theLastMessage)) {
                     last_msg.setText(R.string.no_messages);
                 } else {
@@ -148,7 +139,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 }
                 theLastMessage = "default";
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                  Toast.makeText(mContext, "Failed to load last message.", Toast.LENGTH_SHORT).show();
