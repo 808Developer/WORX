@@ -6,19 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.rcaudle.myapplication.R;
-import com.rcaudle.myapplication.model.Chat;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import com.bumptech.glide.Glide;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import com.rcaudle.myapplication.R;
+import com.rcaudle.myapplication.model.Chat;
 /**
  * created by RCaudle
  */
@@ -36,7 +37,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.mChat = mChat;
         this.recipientImageUrl = recipientImageUrl;
     }
-
     @NonNull
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,7 +48,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             return new ViewHolder(view);
         }
     }
-
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
         Chat chat = mChat.get(position);
@@ -64,13 +63,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 Glide.with(mContext).load(recipientImageUrl).into(holder.profile_image);
             }
         }
-        
         // Hide profile image on the right for a cleaner UI, similar to popular messengers.
         if (getItemViewType(position) == MSG_TYPE_RIGHT) {
             holder.profile_image.setVisibility(View.GONE);
         }
-
-
         // Handle visibility for text vs. image messages
         if (chat.getImageUrl() != null && !chat.getImageUrl().isEmpty() && !"null".equalsIgnoreCase(chat.getImageUrl()) && chat.getMessage().equals("New Picture!")) {
             holder.myImageView.setVisibility(View.VISIBLE);
@@ -83,7 +79,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.myImageView.setVisibility(View.GONE);
             holder.show_message.setVisibility(View.VISIBLE);
         }
-        
         // Handle read receipts for the last message
         if (position == mChat.size() - 1) {
             holder.txt_read.setVisibility(View.VISIBLE);
@@ -96,12 +91,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.txt_read.setVisibility(View.GONE);
         }
     }
-
     @Override
     public int getItemCount() {
         return mChat.size();
     }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView show_message;
         private TextView txt_read;
@@ -118,7 +111,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             myImageView = itemView.findViewById(R.id.myImageView);
         }
     }
-
     @Override
     public int getItemViewType(int position) {
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
