@@ -36,7 +36,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.bumptech.glide.Glide;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
